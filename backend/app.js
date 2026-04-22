@@ -3,6 +3,8 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const mongoSanitize = require("express-mongo-sanitize");
+const mainRouter = require("./routes");
+const { apiLimiter } = require("./middlewares/rateLimiter.middleware");
 
 const app = express();
 
@@ -36,5 +38,11 @@ app.use(express.json());
 
 // Sanitize data to prevent NoSQL injection
 app.use(mongoSanitize());
+
+// Rate limiting for all API routes
+app.use("/api/v1", apiLimiter);
+
+// Routes
+app.use("/api/v1", mainRouter);
 
 module.exports = app;
