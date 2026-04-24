@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LuminaFX — Digital Wallet
+
+This is a modern, light-themed multi-currency digital wallet project bootstrapped with [Next.js](https://nextjs.org).
 
 ## Getting Started
 
