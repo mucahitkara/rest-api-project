@@ -1,59 +1,71 @@
-import clsx from "clsx";
-import { useId } from "react";
+'use client';
 
-type InputProps = {
+import { InputHTMLAttributes, forwardRef, useState } from 'react';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
+
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  placeholder?: string;
   error?: string;
-  type?: string;
-  disabled?: boolean;
-};
-
-export default function Input({
-  label,
-  placeholder,
-  error,
-  type = "text",
-  disabled = false,
-}: InputProps) {
-  const id = useId();
-  const errorId = `${id}-error`;
-
-  return (
-    <div className="w-full space-y-1">
-      {label && (
-        <label htmlFor={id} className="text-sm font-medium text-neutral-700">
-          {label}
-        </label>
-      )}
-
-      <input
-        id={id}
-        type={type}
-        placeholder={placeholder}
-        disabled={disabled}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={error ? errorId : undefined}
-        className={clsx(
-          "w-full px-4 py-2 rounded-lg border transition-all outline-none",
-          "bg-white text-neutral-900 placeholder-neutral-400",
-          "focus:ring-2 focus:ring-primary-500 focus:border-primary-500",
-
-          {
-            "border-neutral-300": !error,
-            "border-danger-500 focus:ring-danger-500 focus:border-danger-500":
-              error,
-          },
-
-          disabled && "bg-neutral-100 opacity-60 cursor-not-allowed"
-        )}
-      />
-
-      {error && (
-        <p id={errorId} className="text-xs text-danger-600">
-          {error}
-        </p>
-      )}
-    </div>
-  );
+  hint?: string;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
 }
+
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ label, error, hint, type, leftIcon, rightIcon, className = '', ...props }, ref) => {
+    const [showPassword, setShowPassword] = useState(false);
+    const isPassword = type === 'password';
+    const inputType = isPassword ? (showPassword ? 'text' : 'password') : type;
+
+    return (
+      <div className="w-full">
+        {label && (
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5 ml-1">{label}</label>
+        )}
+        <div className="relative group">
+          {leftIcon && (
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]/50 z-10 pointer-events-none group-focus-within:text-blue-500 transition-colors">
+              {leftIcon}
+            </div>
+          )}
+          <input
+            ref={ref}
+            type={inputType}
+            className={`
+              w-full px-4 py-3 rounded-xl
+              bg-[var(--bg-primary)] border border-[var(--border-subtle)]
+              text-[var(--text-primary)] placeholder-[var(--text-secondary)]/50
+              focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/40
+              transition-all duration-200
+              ${leftIcon ? 'pl-11' : ''}
+              ${isPassword || rightIcon ? 'pr-12' : ''}
+              ${error ? 'border-red-500/30 focus:ring-red-500/10' : ''}
+              ${className}
+            `}
+            {...props}
+          />
+          {isPassword ? (
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+            >
+              {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+            </button>
+          ) : (
+            rightIcon && (
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]/50">
+                {rightIcon}
+              </div>
+            )
+          )}
+        </div>
+        {error && <p className="mt-1.5 text-xs text-red-400">{error}</p>}
+        {hint && !error && <p className="mt-1.5 text-xs text-slate-500">{hint}</p>}
+      </div>
+    );
+  }
+);
+
+Input.displayName = 'Input';
+export default Input;
