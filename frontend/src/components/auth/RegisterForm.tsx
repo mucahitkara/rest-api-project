@@ -16,15 +16,17 @@ export default function RegisterForm({ onSwitchMode }: RegisterFormProps) {
   const router = useRouter();
   const { register } = useAuthStore();
   const [form, setForm] = useState({ firstName: '', lastName: '', username: '', password: '' });
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setError('');
     if (!form.firstName || !form.lastName || !form.username || !form.password) {
-      toast.error('Please fill in all fields');
+      setError('Please fill in all fields');
       return;
     }
     if (form.password.length < 8) {
-      toast.error('Password must be at least 8 characters');
+      setError('Password must be at least 8 characters');
       return;
     }
     setLoading(true);
@@ -34,7 +36,7 @@ export default function RegisterForm({ onSwitchMode }: RegisterFormProps) {
       toast.success('Account created successfully!');
       router.replace('/dashboard');
     } else {
-      toast.error(result.message || 'Registration failed');
+      setError(result.message || 'Registration failed');
     }
   };
 
@@ -45,11 +47,16 @@ export default function RegisterForm({ onSwitchMode }: RegisterFormProps) {
     <div className="w-full animate-in">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-[var(--text-primary)]">Create account</h1>
-        <p className="text-[var(--text-secondary)] mt-1">Join LuminaFX and start transacting</p>
+        <h1 className="text-3xl font-bold text-(--text-primary)">Create account</h1>
+        <p className="text-(--text-secondary) mt-1">Join LuminaFX and start transacting</p>
       </div>
 
-      <div className="bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-3xl p-10 shadow-xl shadow-blue-500/5">
+      <div className="bg-(--bg-secondary) border border-(--border-subtle) rounded-3xl p-10 shadow-xl shadow-blue-500/5">
+        {error && (
+          <div className="mb-6 p-4 rounded-2xl bg-red-50 border border-red-100 text-red-600 text-sm font-medium animate-in">
+            {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-2 gap-4">
             <Input
@@ -94,7 +101,7 @@ export default function RegisterForm({ onSwitchMode }: RegisterFormProps) {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-[var(--text-secondary)] text-sm">
+          <p className="text-(--text-secondary) text-sm">
             Already have an account?{' '}
             <button 
               onClick={() => onSwitchMode('login')}
