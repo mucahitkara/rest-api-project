@@ -35,7 +35,7 @@ export default function LoginForm({ onSwitchMode }: LoginFormProps) {
       toast.success('Successfully logged in!');
       router.replace('/dashboard');
     } else {
-      toast.error(result.message || 'Login failed');
+      setError(result.message || 'Email or password incorrect');
     }
   };
 
@@ -43,12 +43,17 @@ export default function LoginForm({ onSwitchMode }: LoginFormProps) {
     <div className="w-full animate-in">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-[var(--text-primary)]">Welcome back</h1>
-        <p className="text-[var(--text-secondary)] mt-1">Sign in to your LuminaFX account</p>
+        <h1 className="text-3xl font-bold text-(--text-primary)">Welcome back</h1>
+        <p className="text-(--text-secondary) mt-1">Sign in to your LuminaFX account</p>
       </div>
 
       {/* Form Card */}
-      <div className="bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-3xl p-10 shadow-xl shadow-blue-500/5">
+      <div className="bg-(--bg-secondary) border border-(--border-subtle) rounded-3xl p-10 shadow-xl shadow-blue-500/5">
+        {error && (
+          <div className="mb-6 p-4 rounded-2xl bg-red-50 border border-red-100 text-red-600 text-sm font-medium animate-in">
+            {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-6">
           <Input
             label="Email address"
@@ -86,7 +91,7 @@ export default function LoginForm({ onSwitchMode }: LoginFormProps) {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-[var(--text-secondary)] text-sm">
+          <p className="text-(--text-secondary) text-sm">
             Don&apos;t have an account?{' '}
             <button 
               onClick={() => onSwitchMode('register')}
