@@ -104,28 +104,6 @@ export default function ProfilePage() {
         ))}
       </Card>
 
-      {/* Security */}
-      <Card padding="none">
-        <div className="px-6 py-4 border-b border-(--border-subtle)">
-          <h3 className="text-sm font-semibold text-(--text-primary) flex items-center gap-2">
-            <FiShield size={14} />
-            Security
-          </h3>
-        </div>
-        {[
-          { label: "Authentication", value: "JWT + Refresh Token" },
-          { label: "Password", value: "bcrypt (10 rounds)" },
-          { label: "Session", value: "1 hour access / 7 days refresh" },
-        ].map(({ label, value }) => (
-          <div
-            key={label}
-            className="flex items-center justify-between px-6 py-4 border-b border-(--border-subtle) last:border-b-0"
-          >
-            <span className="text-(--text-secondary) text-sm">{label}</span>
-            <span className="text-(--text-secondary) text-sm">{value}</span>
-          </div>
-        ))}
-      </Card>
 
       <p className="text-center text-(--text-secondary)/60 text-xs font-medium uppercase tracking-[0.2em]">
         LuminaFX © 2026 · Multi-currency digital wallet
