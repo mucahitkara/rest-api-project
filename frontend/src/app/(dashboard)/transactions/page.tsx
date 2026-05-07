@@ -7,6 +7,7 @@ import CurrencyBadge from '@/components/ui/CurrencyBadge';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useQueryClient } from '@tanstack/react-query';
 import { FiArrowUpRight, FiArrowDownLeft, FiRefreshCw } from 'react-icons/fi';
+import { HiInbox } from 'react-icons/hi2';
 
 export default function TransactionsPage() {
   const { data: transactions, isLoading } = useTransactions();
@@ -16,14 +17,14 @@ export default function TransactionsPage() {
     <div className="space-y-6 animate-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--text-primary)]">Transactions</h1>
-          <p className="text-[var(--text-secondary)] text-sm mt-1">
+          <h1 className="text-2xl font-bold text-(--text-primary)">Transactions</h1>
+          <p className="text-(--text-secondary) text-sm mt-1">
             {transactions ? `${transactions.length} transactions` : 'Your full activity history'}
           </p>
         </div>
         <button
           onClick={() => queryClient.invalidateQueries({ queryKey: ['transactions'] })}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-primary)] transition-all text-sm shadow-sm"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-(--bg-secondary) border border-(--border-subtle) text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--bg-primary) transition-all text-sm shadow-sm"
         >
           <FiRefreshCw size={14} />
           Refresh
@@ -33,15 +34,17 @@ export default function TransactionsPage() {
       {isLoading ? (
         <LoadingSpinner text="Loading transactions..." />
       ) : !transactions || transactions.length === 0 ? (
-        <Card padding="lg" className="text-center py-16">
-          <p className="text-4xl mb-4">📭</p>
-          <p className="text-[var(--text-primary)] font-semibold">No transactions yet</p>
-          <p className="text-[var(--text-secondary)] text-sm mt-1">Send money or exchange currencies to get started</p>
+        <Card padding="lg" className="text-center py-16 flex flex-col items-center">
+          <div className="w-16 h-16 rounded-2xl bg-(--bg-primary) flex items-center justify-center text-(--text-secondary)/30 mb-4 border border-(--border-subtle) shadow-sm">
+            <HiInbox size={32} />
+          </div>
+          <p className="text-(--text-primary) font-semibold">No transactions yet</p>
+          <p className="text-(--text-secondary) text-sm mt-1">Send money or exchange currencies to get started</p>
         </Card>
       ) : (
         <Card padding="none">
           {/* Table header — desktop */}
-          <div className="hidden md:grid grid-cols-5 gap-4 px-6 py-3 border-b border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">
+          <div className="hidden md:grid grid-cols-5 gap-4 px-6 py-3 border-b border-(--border-subtle) text-xs font-semibold text-(--text-secondary) uppercase tracking-wider">
             <span>Type</span>
             <span>Amount</span>
             <span>Currency</span>
@@ -53,7 +56,7 @@ export default function TransactionsPage() {
           {transactions.map((tx, i) => (
             <div
               key={tx._id}
-              className={`flex flex-col md:grid md:grid-cols-5 gap-2 md:gap-4 px-4 md:px-6 py-4 ${i !== transactions.length - 1 ? 'border-b border-[var(--border-subtle)]' : ''} hover:bg-[var(--bg-primary)] transition-colors`}
+              className={`flex flex-col md:grid md:grid-cols-5 gap-2 md:gap-4 px-4 md:px-6 py-4 ${i !== transactions.length - 1 ? 'border-b border-(--border-subtle)' : ''} hover:bg-(--bg-primary) transition-colors`}
             >
               {/* Type badge */}
               <div className="flex items-center gap-2">
@@ -81,12 +84,16 @@ export default function TransactionsPage() {
 
               {/* Counterparty */}
               <div className="flex items-center">
-                <span className="text-[var(--text-primary)] text-sm truncate">{tx.targetName}</span>
+                <span className="text-(--text-primary) text-sm truncate">
+                  {tx.type === 'exchange' && tx.targetName.startsWith('→') 
+                    ? `${tx.currency} ${tx.targetName}` 
+                    : tx.targetName}
+                </span>
               </div>
 
               {/* Date */}
               <div className="flex items-center">
-                <span className="text-[var(--text-secondary)] text-xs">{formatDate(tx.date)}</span>
+                <span className="text-(--text-secondary) text-xs">{formatDate(tx.date)}</span>
               </div>
             </div>
           ))}

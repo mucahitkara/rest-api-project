@@ -139,7 +139,11 @@ export default function DashboardPage() {
                     )}
                   </div>
                   <div>
-                    <p className="text-(--text-primary) text-sm font-medium">{tx.targetName}</p>
+                    <p className="text-(--text-primary) text-sm font-medium">
+                      {tx.type === 'exchange' && tx.targetName.startsWith('→') 
+                        ? `${tx.currency} ${tx.targetName}` 
+                        : tx.targetName}
+                    </p>
                     <p className="text-(--text-secondary) text-xs">{formatDate(tx.date)}</p>
                   </div>
                 </div>
