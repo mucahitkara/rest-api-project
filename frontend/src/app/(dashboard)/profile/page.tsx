@@ -16,7 +16,7 @@ export default function ProfilePage() {
     `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
 
   return (
-    <div className="space-y-6 animate-in max-w-2xl">
+    <div className="space-y-6 animate-in">
       <div>
         <h1 className="text-2xl font-bold text-(--text-primary)">Profile</h1>
         <p className="text-(--text-secondary) text-sm mt-1">
