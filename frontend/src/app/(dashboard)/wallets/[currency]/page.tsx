@@ -147,7 +147,11 @@ export default function WalletDetailPage() {
                           )}
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-[var(--text-primary)]">{tx.targetName}</p>
+                          <p className="text-sm font-bold text-[var(--text-primary)]">
+                            {tx.type === 'exchange' && tx.targetName.startsWith('→') 
+                              ? `${tx.currency} ${tx.targetName}` 
+                              : tx.targetName}
+                          </p>
                           <p className="text-[var(--text-secondary)] text-xs">{formatDate(tx.date)}</p>
                         </div>
                       </div>
