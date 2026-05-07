@@ -1,6 +1,7 @@
 'use client';
 
-import { ReactNode, useEffect, useRef } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { FiX } from 'react-icons/fi';
 import Button from './Button';
 
@@ -26,28 +27,36 @@ export default function Modal({
   confirmVariant = 'primary',
 }: ModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    if (isOpen) document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
+    if (isOpen) {
+      document.addEventListener('keydown', handleKey);
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.removeEventListener('keydown', handleKey);
+      document.body.style.overflow = 'unset';
+    };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+  return createPortal(
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
       <div
         ref={overlayRef}
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
         onClick={onClose}
       />
-      <div className="relative z-10 w-full max-w-md rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border-subtle)] shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-        <div className="flex items-center justify-between p-6 border-b border-[var(--border-subtle)]">
-          <h2 className="text-lg font-semibold text-[var(--text-primary)]">{title}</h2>
+      <div className="relative z-110 w-full max-w-md rounded-2xl bg-(--bg-secondary) border border-(--border-subtle) shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+        <div className="flex items-center justify-between p-6 border-b border-(--border-subtle)">
+          <h2 className="text-lg font-semibold text-(--text-primary)">{title}</h2>
           <button
             onClick={onClose}
-            className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors p-1 rounded-lg hover:bg-[var(--bg-primary)]"
+            className="text-(--text-secondary) hover:text-(--text-primary) transition-colors p-1 rounded-lg hover:bg-(--bg-primary)"
           >
             <FiX size={20} />
           </button>
@@ -69,6 +78,7 @@ export default function Modal({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

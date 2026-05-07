@@ -111,24 +111,24 @@ export default function TransferPage() {
   };
 
   return (
-    <div className="space-y-6 animate-in max-w-xl">
+    <div className="space-y-6 animate-in">
       <div>
-        <h1 className="text-2xl font-bold text-[var(--text-primary)]">Send Money</h1>
-        <p className="text-[var(--text-secondary)] text-sm mt-1">Transfer to any user on LuminaFX</p>
+        <h1 className="text-2xl font-bold text-(--text-primary)">Send Money</h1>
+        <p className="text-(--text-secondary) text-sm mt-1">Transfer to any user on LuminaFX</p>
       </div>
 
       {/* Recipient Selection */}
       <Card>
-        <div className="flex bg-[var(--bg-primary)] p-1 rounded-xl mb-6 border border-[var(--border-subtle)]">
+        <div className="flex bg-(--bg-primary) p-1 rounded-xl mb-6 border border-(--border-subtle)">
           <button
             onClick={() => setTransferMode('user')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${transferMode === 'user' ? 'bg-white shadow-sm text-blue-600' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
+            className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${transferMode === 'user' ? 'bg-white shadow-sm text-blue-600' : 'text-(--text-secondary) hover:text-(--text-primary)'}`}
           >
             Search User
           </button>
           <button
             onClick={() => setTransferMode('number')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${transferMode === 'number' ? 'bg-white shadow-sm text-blue-600' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
+            className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${transferMode === 'number' ? 'bg-white shadow-sm text-blue-600' : 'text-(--text-secondary) hover:text-(--text-primary)'}`}
           >
             Wallet Number
           </button>
@@ -136,7 +136,7 @@ export default function TransferPage() {
 
         {transferMode === 'user' ? (
           <>
-            <p className="text-sm font-semibold text-[var(--text-primary)] mb-4">Select Recipient</p>
+            <p className="text-sm font-semibold text-(--text-primary) mb-4">Select Recipient</p>
             <div className="mb-4">
               <Input
                 value={search}
@@ -149,7 +149,7 @@ export default function TransferPage() {
             {usersLoading ? (
               <LoadingSpinner size="sm" />
             ) : users?.length === 0 ? (
-              <p className="text-[var(--text-secondary)] text-sm text-center py-3">No users found</p>
+              <p className="text-(--text-secondary) text-sm text-center py-3">No users found</p>
             ) : (
               <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
                 {users?.map((u) => {
@@ -158,14 +158,14 @@ export default function TransferPage() {
                     <button
                       key={u.userid}
                       onClick={() => setSelectedUser(isSelected ? null : u)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all ${isSelected ? 'bg-blue-50 border border-blue-200 shadow-sm shadow-blue-500/5' : 'bg-[var(--bg-primary)]/50 border border-[var(--border-subtle)] hover:bg-[var(--bg-primary)]'}`}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all ${isSelected ? 'bg-blue-50 border border-blue-200 shadow-sm shadow-blue-500/5' : 'bg-(--bg-primary)/50 border border-(--border-subtle) hover:bg-(--bg-primary)'}`}
                     >
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-md shadow-blue-500/10">
+                      <div className="w-9 h-9 rounded-full bg-linear-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-md shadow-blue-500/10">
                         {u.firstName.charAt(0)}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-[var(--text-primary)] text-sm font-medium">{u.firstName} {u.lastName}</p>
-                        <p className="text-[var(--text-secondary)] text-xs truncate">{u.username}</p>
+                        <p className="text-(--text-primary) text-sm font-medium">{u.firstName} {u.lastName}</p>
+                        <p className="text-(--text-secondary) text-xs truncate">{u.username}</p>
                       </div>
                       {isSelected && <FiCheck size={16} className="text-blue-500 shrink-0" />}
                     </button>
@@ -176,7 +176,7 @@ export default function TransferPage() {
           </>
         ) : (
           <div className="space-y-4">
-            <p className="text-sm font-semibold text-[var(--text-primary)] mb-2">Target Wallet Details</p>
+            <p className="text-sm font-semibold text-(--text-primary) mb-2">Target Wallet Details</p>
             <Input
               label="16-Digit Wallet Number"
               value={walletNumber.replace(/\s/g, '').match(/.{1,4}/g)?.join(' ') || ''}
@@ -192,12 +192,12 @@ export default function TransferPage() {
             {foundRecipient && (
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center justify-between animate-in fade-in slide-in-from-top-2 shadow-sm shadow-blue-500/5">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white shadow-sm ring-2 ring-white">
+                  <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white shadow-sm ring-2 ring-white">
                     <FiUser size={18} />
                   </div>
                   <div>
                     <p className="text-[10px] text-blue-600 font-bold uppercase tracking-wider mb-0.5">Recipient Verified</p>
-                    <p className="text-[var(--text-primary)] font-semibold">{foundRecipient.firstName} {foundRecipient.lastName}</p>
+                    <p className="text-(--text-primary) font-semibold">{foundRecipient.firstName} {foundRecipient.lastName}</p>
                   </div>
                 </div>
                 <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white">
@@ -212,7 +212,7 @@ export default function TransferPage() {
       {/* Currency & Amount */}
       <Card>
         <div className="flex items-center justify-between mb-4">
-          <p className="text-sm font-semibold text-[var(--text-primary)]">Amount</p>
+          <p className="text-sm font-semibold text-(--text-primary)">Amount</p>
           {transferMode === 'number' && foundRecipient && (
              <span className="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-bold uppercase ring-1 ring-blue-100 italic">Currency Locked</span>
           )}
@@ -237,7 +237,7 @@ export default function TransferPage() {
           </div>
         </div>
         <div className="flex items-center justify-between text-xs">
-          <span className="text-[var(--text-secondary)]">Available: {formatCurrency(available, currency)}</span>
+          <span className="text-(--text-secondary)">Available: {formatCurrency(available, currency)}</span>
           {available > 0 && (
             <button onClick={() => setAmount(available.toString())} className="text-blue-600 hover:text-blue-700 transition-colors font-medium">
               Use max
@@ -250,23 +250,23 @@ export default function TransferPage() {
       </Card>
 
       {/* Summary */}
-      <Card padding="sm" className="bg-[var(--bg-primary)]/50 border-[var(--border-subtle)]">
+      <Card padding="sm" className="bg-(--bg-primary)/50 border-(--border-subtle)">
         <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center gap-2 text-[var(--text-secondary)]">
+          <div className="flex items-center gap-2 text-(--text-secondary)">
             <FiUser size={14} />
             <span>Recipient</span>
           </div>
-          <span className="text-[var(--text-primary)] font-medium">
+          <span className="text-(--text-primary) font-medium">
             {transferMode === 'user' 
-              ? (selectedUser ? `${selectedUser.firstName} ${selectedUser.lastName}` : <span className="text-[var(--text-secondary)]/40">—</span>)
-              : (foundRecipient ? `${foundRecipient.firstName} ${foundRecipient.lastName}` : <span className="text-[var(--text-secondary)]/40">—</span>)
+              ? (selectedUser ? `${selectedUser.firstName} ${selectedUser.lastName}` : <span className="text-(--text-secondary)/40">—</span>)
+              : (foundRecipient ? `${foundRecipient.firstName} ${foundRecipient.lastName}` : <span className="text-(--text-secondary)/40">—</span>)
             }
           </span>
         </div>
         <div className="flex items-center justify-between text-sm mt-3">
-          <span className="text-[var(--text-secondary)]">You&apos;ll send</span>
-          <span className="text-[var(--text-primary)] font-semibold">
-            {amount ? formatCurrency(numAmount, currency) : <span className="text-[var(--text-secondary)]/40">—</span>}
+          <span className="text-(--text-secondary)">You&apos;ll send</span>
+          <span className="text-(--text-primary) font-semibold">
+            {amount ? formatCurrency(numAmount, currency) : <span className="text-(--text-secondary)/40">—</span>}
           </span>
         </div>
       </Card>
@@ -284,10 +284,10 @@ export default function TransferPage() {
         confirmLoading={submitting}
       >
         <div className="space-y-3 text-sm">
-          <div className="bg-[var(--bg-primary)] rounded-xl p-4 space-y-2 border border-[var(--border-subtle)]">
+          <div className="bg-(--bg-primary) rounded-xl p-4 space-y-2 border border-(--border-subtle)">
             <div className="flex justify-between">
-              <span className="text-[var(--text-secondary)]">To</span>
-              <span className="text-[var(--text-primary)] font-semibold">
+              <span className="text-(--text-secondary)">To</span>
+              <span className="text-(--text-primary) font-semibold">
                 {transferMode === 'user' 
                   ? `${selectedUser?.firstName} ${selectedUser?.lastName}` 
                   : `${foundRecipient?.firstName} ${foundRecipient?.lastName}`
@@ -295,11 +295,11 @@ export default function TransferPage() {
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-[var(--text-secondary)]">Amount</span>
-              <span className="text-[var(--text-primary)] font-semibold">{formatCurrency(numAmount, currency)}</span>
+              <span className="text-(--text-secondary)">Amount</span>
+              <span className="text-(--text-primary) font-semibold">{formatCurrency(numAmount, currency)}</span>
             </div>
           </div>
-          <p className="text-[var(--text-secondary)] text-xs text-center">This action cannot be undone.</p>
+          <p className="text-(--text-secondary) text-xs text-center">This action cannot be undone.</p>
         </div>
       </Modal>
     </div>

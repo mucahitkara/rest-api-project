@@ -95,17 +95,17 @@ export default function ExchangePage() {
   }));
 
   return (
-    <div className="space-y-6 animate-in max-w-xl">
+    <div className="space-y-6 animate-in">
       <div>
-        <h1 className="text-2xl font-bold text-[var(--text-primary)]">Exchange</h1>
-        <p className="text-[var(--text-secondary)] text-sm mt-1">Convert between currencies at live NBP rates</p>
+        <h1 className="text-2xl font-bold text-(--text-primary)">Exchange</h1>
+        <p className="text-(--text-secondary) text-sm mt-1">Convert between currencies at live NBP rates</p>
       </div>
 
       {/* From */}
       <Card>
         <div className="flex items-center justify-between mb-4">
-          <p className="text-sm font-semibold text-[var(--text-primary)]">From Wallet</p>
-          <span className="text-xs text-[var(--text-secondary)]">Available: {formatCurrency(available, fromCurrency)}</span>
+          <p className="text-sm font-semibold text-(--text-primary)">From Wallet</p>
+          <span className="text-xs text-(--text-secondary)">Available: {formatCurrency(available, fromCurrency)}</span>
         </div>
         <div className="flex flex-col md:flex-row gap-4">
           <Dropdown
@@ -139,7 +139,7 @@ export default function ExchangePage() {
       <div className="flex justify-center">
         <button
           onClick={swap}
-          className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+          className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-violet-600 flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
         >
           <FiArrowDown size={18} className="text-white" />
         </button>
@@ -147,7 +147,7 @@ export default function ExchangePage() {
 
       {/* To */}
       <Card>
-        <p className="text-sm font-semibold text-[var(--text-primary)] mb-4">To Wallet</p>
+        <p className="text-sm font-semibold text-(--text-primary) mb-4">To Wallet</p>
         <div className="flex flex-col md:flex-row gap-4">
           <Dropdown
             value={toCurrency}
@@ -160,7 +160,7 @@ export default function ExchangePage() {
               type="text"
               value={calculating ? 'Calculating...' : toAmount}
               readOnly
-              className="w-full px-4 py-3 rounded-xl bg-[var(--bg-primary)] border border-[var(--border-subtle)] text-[var(--text-primary)] placeholder-[var(--text-secondary)]/50 focus:outline-none text-sm font-medium"
+              className="w-full px-4 py-3 rounded-xl bg-(--bg-primary) border border-(--border-subtle) text-(--text-primary) placeholder-(--text-secondary)/50 focus:outline-none text-sm font-medium"
               placeholder="0.00"
             />
             {calculating && (
@@ -170,13 +170,13 @@ export default function ExchangePage() {
             )}
           </div>
         </div>
-        <p className="text-xs text-[var(--text-secondary)] mt-2">
+        <p className="text-xs text-(--text-secondary) mt-2">
           Current: {formatCurrency(balances?.[toCurrency] || 0, toCurrency)}
         </p>
       </Card>
 
       {/* Rates note */}
-      <div className="flex items-start gap-2 text-[var(--text-secondary)]/60 text-xs">
+      <div className="flex items-start gap-2 text-(--text-secondary)/60 text-xs">
         <FiInfo size={13} className="mt-0.5 shrink-0" />
         <span>
           {ratesLoading ? 'Loading live rates...' : 'Rates via National Bank of Poland (NBP) API. UZS & INR use approximate rates.'}
@@ -188,14 +188,14 @@ export default function ExchangePage() {
         <Card padding="sm">
           <div className="flex items-center gap-2 mb-3">
             <FiRefreshCw size={13} className="text-blue-600" />
-            <p className="text-xs font-semibold text-[var(--text-primary)]">Live Rates (vs PLN)</p>
+            <p className="text-xs font-semibold text-(--text-primary)">Live Rates (vs PLN)</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {rates.map((r) => {
               const cur = CURRENCIES.find((c) => c.value === r.currency);
               return (
-                <div key={r.currency} className="flex items-center justify-between text-xs bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-lg px-3 py-2">
-                  <span className="text-[var(--text-secondary)]">{cur?.flag} {r.currency}</span>
+                <div key={r.currency} className="flex items-center justify-between text-xs bg-(--bg-primary) border border-(--border-subtle) rounded-lg px-3 py-2">
+                  <span className="text-(--text-secondary)">{cur?.flag} {r.currency}</span>
                   <span className="text-blue-600 font-semibold">{r.rate.toFixed(4)}</span>
                 </div>
               );
@@ -222,17 +222,17 @@ export default function ExchangePage() {
         confirmLoading={submitting}
       >
         <div className="space-y-3 text-sm">
-          <div className="bg-[var(--bg-primary)] rounded-xl p-4 space-y-2 border border-[var(--border-subtle)]">
+          <div className="bg-(--bg-primary) rounded-xl p-4 space-y-2 border border-(--border-subtle)">
             <div className="flex justify-between">
-              <span className="text-[var(--text-secondary)]">You send</span>
-              <span className="text-[var(--text-primary)] font-semibold">{formatCurrency(parseFloat(fromAmount || '0'), fromCurrency)}</span>
+              <span className="text-(--text-secondary)">You send</span>
+              <span className="text-(--text-primary) font-semibold">{formatCurrency(parseFloat(fromAmount || '0'), fromCurrency)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-[var(--text-secondary)]">You receive</span>
+              <span className="text-(--text-secondary)">You receive</span>
               <span className="text-emerald-600 font-semibold">{formatCurrency(parseFloat(toAmount || '0'), toCurrency)}</span>
             </div>
           </div>
-          <p className="text-[var(--text-secondary)] text-xs text-center">Exchange rates are locked at confirmation time.</p>
+          <p className="text-(--text-secondary) text-xs text-center">Exchange rates are locked at confirmation time.</p>
         </div>
       </Modal>
     </div>

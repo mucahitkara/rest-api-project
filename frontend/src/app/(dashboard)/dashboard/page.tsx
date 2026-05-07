@@ -10,6 +10,8 @@ import CurrencyBadge from '@/components/ui/CurrencyBadge';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Link from 'next/link';
 import { FiArrowRight, FiRefreshCw, FiSend, FiCreditCard, FiArrowDownLeft, FiArrowUpRight } from 'react-icons/fi';
+import { HiSparkles } from 'react-icons/hi2';
+import { PiHandWaving } from 'react-icons/pi';
 
 const quickActions = [
   { label: 'Wallets', href: '/wallets', icon: FiCreditCard, color: 'from-blue-500 to-blue-600' },
@@ -32,16 +34,22 @@ export default function DashboardPage() {
     <div className="space-y-8 animate-in">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-[var(--text-primary)]">
-          Hello, {user?.firstName} 👋
-        </h1>
-        <p className="text-[var(--text-secondary)] mt-1 text-sm">
+        <div className="flex items-center gap-3 mb-1">
+          <h1 className="text-3xl font-bold text-(--text-primary)">
+            Hello, {user?.firstName}
+          </h1>
+          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-amber-400/10 text-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.15)] animate-wave">
+            <PiHandWaving size={24} />
+          </div>
+          <HiSparkles className="text-amber-400 animate-pulse delay-100" size={20} />
+        </div>
+        <p className="text-(--text-secondary) text-sm font-medium opacity-80">
           {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
         </p>
       </div>
 
       {/* Balance Hero */}
-      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-blue-600 to-violet-700 p-6 md:p-8 shadow-xl shadow-blue-900/30">
+      <div className="relative rounded-2xl overflow-hidden bg-linear-to-br from-blue-600 to-violet-700 p-6 md:p-8 shadow-xl shadow-blue-900/30">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
@@ -61,15 +69,15 @@ export default function DashboardPage() {
 
       {/* Quick Actions */}
       <div>
-        <h2 className="text-base font-semibold text-[var(--text-primary)] mb-4">Quick Actions</h2>
+        <h2 className="text-base font-semibold text-(--text-primary) mb-4">Quick Actions</h2>
         <div className="grid grid-cols-3 gap-4">
           {quickActions.map(({ label, href, icon: Icon, color }) => (
             <Link key={href} href={href}>
               <Card hover padding="md" className="text-center group">
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mx-auto mb-3 shadow-lg group-hover:scale-105 transition-transform`}>
+                <div className={`w-12 h-12 rounded-xl bg-linear-to-br ${color} flex items-center justify-center mx-auto mb-3 shadow-lg group-hover:scale-105 transition-transform`}>
                   <Icon size={20} className="text-white" />
                 </div>
-                <p className="text-[var(--text-primary)] text-sm font-medium">{label}</p>
+                <p className="text-(--text-primary) text-sm font-medium">{label}</p>
               </Card>
             </Link>
           ))}
@@ -80,7 +88,7 @@ export default function DashboardPage() {
       {topWallets.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-[var(--text-primary)]">Active Wallets</h2>
+            <h2 className="text-base font-semibold text-(--text-primary)">Active Wallets</h2>
             <Link href="/wallets" className="text-blue-600 hover:text-blue-700 text-sm flex items-center gap-1 transition-colors">
               View all <FiArrowRight size={14} />
             </Link>
@@ -89,8 +97,8 @@ export default function DashboardPage() {
             {topWallets.map((currency) => (
               <Card key={currency.value} padding="sm">
                 <div className="text-2xl mb-1">{currency.flag}</div>
-                <p className="text-[var(--text-secondary)] text-xs">{currency.value}</p>
-                <p className="text-[var(--text-primary)] font-semibold text-sm mt-0.5">
+                <p className="text-(--text-secondary) text-xs">{currency.value}</p>
+                <p className="text-(--text-primary) font-semibold text-sm mt-0.5">
                   {formatCurrency(balances?.[currency.value] || 0, currency.value)}
                 </p>
               </Card>
@@ -102,7 +110,7 @@ export default function DashboardPage() {
       {/* Recent Transactions */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-semibold text-[var(--text-primary)]">Recent Transactions</h2>
+          <h2 className="text-base font-semibold text-(--text-primary)">Recent Transactions</h2>
           <Link href="/transactions" className="text-blue-600 hover:text-blue-700 text-sm flex items-center gap-1 transition-colors font-medium">
             View all <FiArrowRight size={14} />
           </Link>
@@ -112,8 +120,8 @@ export default function DashboardPage() {
           <LoadingSpinner />
         ) : recentTxs.length === 0 ? (
           <Card padding="md" className="text-center py-10">
-            <p className="text-[var(--text-secondary)] text-sm">No transactions yet</p>
-            <p className="text-[var(--text-secondary)]/60 text-xs mt-1">Your activity will appear here</p>
+            <p className="text-(--text-secondary) text-sm">No transactions yet</p>
+            <p className="text-(--text-secondary)/60 text-xs mt-1">Your activity will appear here</p>
           </Card>
         ) : (
           <Card padding="none">
@@ -131,8 +139,8 @@ export default function DashboardPage() {
                     )}
                   </div>
                   <div>
-                    <p className="text-[var(--text-primary)] text-sm font-medium">{tx.targetName}</p>
-                    <p className="text-[var(--text-secondary)] text-xs">{formatDate(tx.date)}</p>
+                    <p className="text-(--text-primary) text-sm font-medium">{tx.targetName}</p>
+                    <p className="text-(--text-secondary) text-xs">{formatDate(tx.date)}</p>
                   </div>
                 </div>
                 <div className="text-right">
