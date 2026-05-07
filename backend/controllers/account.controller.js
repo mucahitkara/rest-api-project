@@ -182,7 +182,7 @@ exports.exchange = async (req, res) => {
           type: "exchange",
           amount: fromAmount,
           currency: fromCurrency,
-          targetName: `→ ${toCurrency}`,
+          targetName: `${fromCurrency} → ${toCurrency}`,
           date: new Date(),
         },
       ],
