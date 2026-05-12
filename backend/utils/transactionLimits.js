@@ -1,26 +1,15 @@
-// Exchange rates (simplified - in production, use a real API)
-const exchangeRates = {
-  USD: 1,
-  EUR: 0.85,
-  GBP: 0.73,
-  INR: 83.12,
-  JPY: 110.0,
-  UZS: 11000,
-  CAD: 1.25,
-  AUD: 1.35,
-  CHF: 0.92,
-  CNY: 6.45,
-};
+const { getUSDRate } = require("./exchangeRates");
 
 // Convert any amount to USD for limit checking
-const convertToUSD = (amount, currency) => {
-  return amount / exchangeRates[currency];
+const convertToUSD = async (amount, currency) => {
+  const rate = await getUSDRate(currency);
+  return amount * rate;
 };
 
 // Check if transaction exceeds single transaction limit
-const checkTransactionLimit = (amount, currency) => {
+const checkTransactionLimit = async (amount, currency) => {
   const maxTransactionUSD = parseFloat(process.env.MAX_TRANSACTION_AMOUNT) || 10000;
-  const amountInUSD = convertToUSD(amount, currency);
+  const amountInUSD = await convertToUSD(amount, currency);
   
   if (amountInUSD > maxTransactionUSD) {
     return {
@@ -35,7 +24,7 @@ const checkTransactionLimit = (amount, currency) => {
 // Check and update daily transaction limit
 const checkDailyLimit = async (user, amount, currency) => {
   const dailyLimitUSD = parseFloat(process.env.DAILY_TRANSACTION_LIMIT) || 50000;
-  const amountInUSD = convertToUSD(amount, currency);
+  const amountInUSD = await convertToUSD(amount, currency);
   
   const today = new Date();
   today.setHours(0, 0, 0, 0);
