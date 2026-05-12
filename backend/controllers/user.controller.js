@@ -6,6 +6,7 @@ const { JWT_SECRET, JWT_EXPIRES_IN, JWT_REFRESH_SECRET, JWT_REFRESH_EXPIRES_IN }
 const { signupSchema, signinSchema } = require("../validators/user.validator");
 const { sendVerificationEmail } = require("../utils/emailService");
 const { generateAllWalletNumbers } = require("../utils/walletGenerator");
+const { escapeRegExp } = require("../utils/stringUtils");
 
 exports.signup = async (req, res) => {
   try {
@@ -70,7 +71,7 @@ exports.signup = async (req, res) => {
         userId: user._id 
       });
   } catch (err) {
-    res.status(500).json({ message: "Signup failed", error: err.message });
+    res.status(500).json({ message: "Signup failed" });
   }
 };
 
@@ -99,7 +100,7 @@ exports.signin = async (req, res) => {
       refreshToken 
     });
   } catch (err) {
-    res.status(500).json({ message: "Signin failed", error: err.message });
+    res.status(500).json({ message: "Signin failed" });
   }
 };
 
@@ -127,7 +128,7 @@ exports.getAllUsers = async (req, res) => {
 };
 
 exports.bulkSearch = async (req, res) => {
-  const filter = req.query.filter || "";
+  const filter = escapeRegExp(req.query.filter || "");
   const users = await User.find({
     $or: [
       { firstName: { $regex: filter, $options: "i" } },
@@ -145,16 +146,15 @@ exports.bulkSearch = async (req, res) => {
 };
 
 exports.getOtherUsers = async (req, res) => {
-  const filter = req.query.filter || "";
+  const filter = escapeRegExp(req.query.filter || "");
   const users = await User.find({
+    _id: { $ne: req.userId },
     $or: [
       { firstName: { $regex: filter, $options: "i" } },
       { lastName: { $regex: filter, $options: "i" } },
     ],
   }).lean();
-
-  const filtered = users.filter((u) => u._id.toString() !== req.userId);
-  const formatted = filtered.map(({ _id, username, firstName, lastName }) => ({
+  const formatted = users.map(({ _id, username, firstName, lastName }) => ({
     userid: _id,
     username,
     firstName,
@@ -204,7 +204,7 @@ exports.logout = async (req, res) => {
 
     res.status(200).json({ message: "Logged out successfully" });
   } catch (err) {
-    res.status(500).json({ message: "Logout failed", error: err.message });
+    res.status(500).json({ message: "Logout failed" });
   }
 };
 
@@ -223,7 +223,7 @@ exports.verifyEmail = async (req, res) => {
     
     res.status(200).json({ message: "Email verified successfully" });
   } catch (err) {
-    res.status(500).json({ message: "Verification failed", error: err.message });
+    res.status(500).json({ message: "Verification failed" });
   }
 };
 
@@ -251,6 +251,6 @@ exports.resendVerification = async (req, res) => {
       res.status(500).json({ message: "Email service not configured" });
     }
   } catch (err) {
-    res.status(500).json({ message: "Failed to resend verification", error: err.message });
+    res.status(500).json({ message: "Failed to resend verification" });
   }
 };

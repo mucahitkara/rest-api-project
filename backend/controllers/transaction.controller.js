@@ -40,6 +40,11 @@ exports.getOneTransaction = async (req, res) => {
       return res.status(404).json({ message: "Transaction not found" });
     }
 
+    // Authorization check: Ensure transaction belongs to the user
+    if (tx.userId._id.toString() !== req.userId && tx.targetId?._id.toString() !== req.userId) {
+      return res.status(403).json({ message: "Unauthorized to view this transaction" });
+    }
+
     const formatted = {
       _id: tx._id,
       type: tx.type,

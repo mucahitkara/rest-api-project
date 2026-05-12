@@ -16,9 +16,14 @@ exports.getBalance = async (req, res) => {
       await account.save();
     }
 
-    res.status(200).json({ balances: account.balances, walletNumbers: account.walletNumbers });
+    res.status(200).json({ 
+      balances: Object.fromEntries(
+        Object.entries(account.balances.toObject()).map(([k, v]) => [k, v ? v.toString() : "0"])
+      ), 
+      walletNumbers: account.walletNumbers 
+    });
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch balance", error: err.message });
+    res.status(500).json({ message: "Failed to fetch balance" });
   }
 };
 
@@ -60,10 +65,10 @@ exports.transfer = async (req, res) => {
       return res.status(400).json({ message: dailyCheck.message });
     }
     
-    const sender = await Account.findOne({ userId: req.userId }).session(
-      session
-    );
-    if (!sender || (sender.balances[currency] ?? 0) < amount) {
+    const sender = await Account.findOne({ userId: req.userId }).session(session);
+    const senderBalance = sender ? parseFloat(sender.balances[currency].toString()) : 0;
+
+    if (!sender || senderBalance < amount) {
       await session.abortTransaction();
       return res
         .status(400)
@@ -116,18 +121,28 @@ exports.transfer = async (req, res) => {
     res.status(200).json({ message: "Transfer successful" });
   } catch (error) {
     await session.abortTransaction();
-    res.status(500).json({ message: "Transfer failed", error: error.message });
+    res.status(500).json({ message: "Transfer failed" });
   } finally {
     session.endSession();
   }
 };
 
+const { calculateExchange } = require("../utils/exchangeRates");
+
 exports.exchange = async (req, res) => {
-  const { fromCurrency, toCurrency, fromAmount, toAmount } = req.body;
-  // Validate input
-  const { error } = exchangeSchema.validate(req.body);
+  const { fromCurrency, toCurrency, fromAmount } = req.body;
+  // Validate input - Note: we don't trust toAmount from body anymore
+  const { error } = exchangeSchema.validate({ fromCurrency, toCurrency, fromAmount });
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
+  }
+
+  // Calculate trusted amount on server
+  let toAmount;
+  try {
+    toAmount = calculateExchange(fromCurrency, toCurrency, fromAmount);
+  } catch (err) {
+    return res.status(400).json({ message: err.message });
   }
   
   const session = await mongoose.startSession();
@@ -155,10 +170,10 @@ exports.exchange = async (req, res) => {
       return res.status(400).json({ message: dailyCheck.message });
     }
     
-    const account = await Account.findOne({ userId: req.userId }).session(
-      session
-    );
-    if (!account || (account.balances[fromCurrency] ?? 0) < fromAmount) {
+    const account = await Account.findOne({ userId: req.userId }).session(session);
+    const fromBalance = account ? parseFloat(account.balances[fromCurrency].toString()) : 0;
+
+    if (!account || fromBalance < fromAmount) {
       await session.abortTransaction();
       return res
         .status(400)
@@ -193,7 +208,7 @@ exports.exchange = async (req, res) => {
     res.status(200).json({ message: "Exchange successful" });
   } catch (error) {
     await session.abortTransaction();
-    res.status(500).json({ message: "Exchange failed", error: error.message });
+    res.status(500).json({ message: "Exchange failed" });
   } finally {
     session.endSession();
   }
@@ -216,12 +231,14 @@ exports.lookupByNumber = async (req, res) => {
     const user = await User.findById(account.userId).lean();
     if (!user) return res.status(404).json({ message: "User not found" });
 
+    const maskName = (name) => name.charAt(0) + "*".repeat(name.length - 1);
+
     res.status(200).json({
-      firstName: user.firstName,
-      lastName: user.lastName,
+      firstName: maskName(user.firstName),
+      lastName: maskName(user.lastName),
       currency
     });
   } catch (err) {
-    res.status(500).json({ message: "Lookup failed", error: err.message });
+    res.status(500).json({ message: "Lookup failed" });
   }
 };
