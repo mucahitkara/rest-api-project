@@ -45,7 +45,7 @@ exports.transfer = async (req, res) => {
 
   try {
     // Check transaction limit
-    const limitCheck = checkTransactionLimit(amount, currency);
+    const limitCheck = await checkTransactionLimit(amount, currency);
     if (!limitCheck.valid) {
       await session.abortTransaction();
       return res.status(400).json({ message: limitCheck.message });
@@ -140,7 +140,7 @@ exports.exchange = async (req, res) => {
   // Calculate trusted amount on server
   let toAmount;
   try {
-    toAmount = calculateExchange(fromCurrency, toCurrency, fromAmount);
+    toAmount = await calculateExchange(fromCurrency, toCurrency, fromAmount);
   } catch (err) {
     return res.status(400).json({ message: err.message });
   }
@@ -150,7 +150,7 @@ exports.exchange = async (req, res) => {
 
   try {
     // Check transaction limit
-    const limitCheck = checkTransactionLimit(fromAmount, fromCurrency);
+    const limitCheck = await checkTransactionLimit(fromAmount, fromCurrency);
     if (!limitCheck.valid) {
       await session.abortTransaction();
       return res.status(400).json({ message: limitCheck.message });
