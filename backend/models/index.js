@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
   refreshTokens: [{ type: String }],
   lastTransactionDate: { type: Date },
   dailyTransactionTotal: { type: Number, default: 0 },
+  role: { type: String, enum: ["user", "admin"], default: "user" },
 });
 
 // Account Schema with balances per currency
@@ -21,16 +22,16 @@ const accountSchema = new mongoose.Schema({
     required: true,
   },
   balances: {
-    USD: { type: Number, default: 0 },
-    EUR: { type: Number, default: 0 },
-    GBP: { type: Number, default: 0 },
-    INR: { type: Number, default: 0 },
-    JPY: { type: Number, default: 0 },
-    UZS: { type: Number, default: 0 },
-    CAD: { type: Number, default: 0 },
-    AUD: { type: Number, default: 0 },
-    CHF: { type: Number, default: 0 },
-    CNY: { type: Number, default: 0 },
+    USD: { type: mongoose.Schema.Types.Decimal128, default: 0 },
+    EUR: { type: mongoose.Schema.Types.Decimal128, default: 0 },
+    GBP: { type: mongoose.Schema.Types.Decimal128, default: 0 },
+    INR: { type: mongoose.Schema.Types.Decimal128, default: 0 },
+    JPY: { type: mongoose.Schema.Types.Decimal128, default: 0 },
+    UZS: { type: mongoose.Schema.Types.Decimal128, default: 0 },
+    CAD: { type: mongoose.Schema.Types.Decimal128, default: 0 },
+    AUD: { type: mongoose.Schema.Types.Decimal128, default: 0 },
+    CHF: { type: mongoose.Schema.Types.Decimal128, default: 0 },
+    CNY: { type: mongoose.Schema.Types.Decimal128, default: 0 },
   },
   walletNumbers: {
     USD: { type: String, unique: true, sparse: true },
