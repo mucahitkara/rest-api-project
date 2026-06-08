@@ -26,10 +26,9 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (
-      typeof window !== 'undefined' &&
-      (error.response?.status === 401 || error.response?.status === 403)
-    ) {
+    // Only a 401 (invalid/expired session) should force a logout.
+    // A 403 means "forbidden" (e.g. unverified email, admin-only) — keep the session.
+    if (typeof window !== 'undefined' && error.response?.status === 401) {
       Cookies.remove('accessToken');
       window.location.href = '/auth';
     }
