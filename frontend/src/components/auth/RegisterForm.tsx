@@ -29,6 +29,10 @@ export default function RegisterForm({ onSwitchMode }: RegisterFormProps) {
       setError('Password must be at least 8 characters');
       return;
     }
+    if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(form.password)) {
+      setError('Password must contain at least one uppercase letter, one lowercase letter, and one number');
+      return;
+    }
     setLoading(true);
     const result = await register(form);
     setLoading(false);
