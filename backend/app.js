@@ -8,6 +8,11 @@ const { apiLimiter } = require("./middlewares/rateLimiter.middleware");
 
 const app = express();
 
+// Trust the reverse proxy (Render/Vercel run behind 1 proxy hop).
+// Required so express-rate-limit reads the real client IP from X-Forwarded-For
+// instead of keying every request to the proxy IP.
+app.set("trust proxy", 1);
+
 // Security middleware
 app.use(helmet()); // Security headers
 
