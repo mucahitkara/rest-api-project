@@ -3,6 +3,8 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const mongoSanitize = require("express-mongo-sanitize");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./config/swagger");
 const mainRouter = require("./routes");
 const { apiLimiter } = require("./middlewares/rateLimiter.middleware");
 
@@ -39,6 +41,10 @@ app.use(express.json());
 
 // Sanitize data to prevent NoSQL injection
 app.use(mongoSanitize());
+
+// API documentation (Swagger UI)
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get("/api-docs.json", (req, res) => res.json(swaggerSpec));
 
 // Rate limiting for all API routes
 app.use("/api/v1", apiLimiter);
